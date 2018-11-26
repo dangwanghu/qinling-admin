@@ -31,7 +31,7 @@ let routes = [
         iconCls: 'el-icon-message',//图标样式class
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/table', component: Table, name: '表格' },
+            // { path: '/table', component: Table, name: '表格' },
             { path: '/form', component: Form, name: '表单' },
         ]
     },

@@ -1,12 +1,13 @@
 import axios from 'axios';
 
 let base = '';
+let dataServer = '/cunzhuangapi'
 
 export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
-export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
+export const getDataListPage = params => { return axios.get(`${dataServer}/cunzhuang/list`, { params: params }); };
 
-export const getUserListPage = params => { return axios.get(`${base}/user/listpage`, { params: params }); };
+export const getDataTotal = params => { return axios.get(`${dataServer}/cunzhuang/total`, { params: params }); };
 
 export const removeUser = params => { return axios.get(`${base}/user/remove`, { params: params }); };
 

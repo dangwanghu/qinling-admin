@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="名称"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" v-on:click="getDataList">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
@@ -16,30 +16,22 @@
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+		<el-table :data="data" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="55">
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
 			<el-table-column prop="name" label="名称" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="位置描述" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="xLat" label="纬度" :formatter="formatXY" min-width="150">
 			</el-table-column>
-			<el-table-column prop="age" label="简介" width="100" sortable>
+			<el-table-column prop="yLng" label="经度" :formatter="formatXY" min-width="150">
 			</el-table-column>
-			<el-table-column prop="birth" label="人文历史" width="120" sortable>
+			<el-table-column prop="county" label="所属区县" min-width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="其他说明" min-width="180" sortable>
+			<el-table-column prop="town" label="所属乡镇" min-width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="纬度" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="经度" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="所属区县" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="所属乡镇" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="所属峪口" min-width="180" sortable>
+			<el-table-column prop="yuKou" label="所属峪口" min-width="150" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
@@ -51,16 +43,21 @@
 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
-			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
 			</el-pagination>
 		</el-col>
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="名称" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="位置描述">
+					<el-input type="textarea" v-model="editForm.locationDescription"></el-input>
+				</el-form-item>
+				<el-form-item label="简介">
+					<el-input type="textarea" v-model="editForm.introduction"></el-input>
 				</el-form-item>
 				<el-form-item label="性别">
 					<el-radio-group v-model="editForm.sex">
@@ -73,9 +70,6 @@
 				</el-form-item>
 				<el-form-item label="生日">
 					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -116,7 +110,9 @@
 
 <script>
 	import util from '../../common/js/util'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
+	import * as Constants from '../../common/constants';
+	import getApi from '../../api/api';
+	const { getDataListPage, getDataTotal, removeData, editData, addData } = getApi(Constants.CUNZHUANG)
 
 	export default {
 		data() {
@@ -124,12 +120,11 @@
 				filters: {
 					name: ''
 				},
-				users: [],
+				data: [],
 				total: 0,
 				page: 1,
 				listLoading: false,
 				sels: [],//列表选中列
-
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
 				editFormRules: {
@@ -141,10 +136,16 @@
 				editForm: {
 					id: 0,
 					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
+					locationDescription: '',
+					introduction: '',
+					history: '',
+					naturalFeatures: '',
+					otherComments: '',
+					xLat: 0,
+					yLng: 0,
+					county: '',
+					town: '',
+					yuKou: ''
 				},
 
 				addFormVisible: false,//新增界面是否显示
@@ -166,25 +167,50 @@
 			}
 		},
 		methods: {
-			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '<h1>男</h1>' : row.sex == 0 ? '<h1>女</h1>' : '未知';
+			formatXY: function (row, column) {
+				let value = column.property == 'xLat' ? row.xLat : row.yLng;
+				value = "" + value;
+				return value.length > 10 ? value.substring(0, 10) : value;
 			},
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getUsers();
+				this.getDataList();
 			},
-			//获取用户列表
-			getUsers() {
+			getDataList() {
 				let para = {
-					page: this.page,
+					skip: (this.page - 1) * 10,
+					limit: 10,
 					name: this.filters.name
 				};
 				this.listLoading = true;
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
+				let self = this;
+				getDataListPage(para).then((res) => {
+					this.data = res.data.data;
 					this.listLoading = false;
+				}).catch(function (error) {
+					self.listLoading = false;
+					self.$message({
+						message: '请求出错',
+						type: 'error'
+					});
+				});
+			},
+			getDataTotal() {
+				let para = {
+					name: this.filters.name
+				};
+				this.listLoading = true;
+				let self = this;
+				getDataTotal(para).then((res) => {
+					this.total = res.data.data;
+					this.listLoading = false;
+					this.getDataList();
+				}).catch(function (error) {
+					self.listLoading = false;
+					self.$message({
+						message: '请求出错',
+						type: 'error'
+					});
 				});
 			},
 			//删除
@@ -194,13 +220,13 @@
 				}).then(() => {
 					this.listLoading = true;
 					let para = { id: row.id };
-					removeUser(para).then((res) => {
+					removeData(para).then((res) => {
 						this.listLoading = false;
 						this.$message({
 							message: '删除成功',
 							type: 'success'
 						});
-						this.getUsers();
+						this.getDataList();
 					});
 				}).catch(() => {
 
@@ -230,7 +256,7 @@
 							this.editLoading = true;
 							let para = Object.assign({}, this.editForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
+							editData(para).then((res) => {
 								this.editLoading = false;
 								this.$message({
 									message: '提交成功',
@@ -238,7 +264,7 @@
 								});
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
-								this.getUsers();
+								this.getDataList();
 							});
 						});
 					}
@@ -252,7 +278,7 @@
 							this.addLoading = true;
 							let para = Object.assign({}, this.addForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
+							addData(para).then((res) => {
 								this.addLoading = false;
 								this.$message({
 									message: '提交成功',
@@ -260,7 +286,7 @@
 								});
 								this.$refs['addForm'].resetFields();
 								this.addFormVisible = false;
-								this.getUsers();
+								this.getDataList();
 							});
 						});
 					}
@@ -268,30 +294,10 @@
 			},
 			selsChange: function (sels) {
 				this.sels = sels;
-			},
-			//批量删除
-			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
-
-				});
 			}
 		},
 		mounted() {
-			this.getUsers();
+			this.getDataTotal();
 		}
 	}
 
