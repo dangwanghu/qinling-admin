@@ -18,40 +18,60 @@ export default {
             editLoading: false,
             editFormRules: {
                 name: [
-                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                    { required: true, message: '请输入名称', trigger: 'blur' }
+                ],
+                xLat: [
+                    { required: true, message: '请输入纬度', trigger: 'blur' }
+                ],
+                yLng: [
+                    { required: true, message: '请输入经度', trigger: 'blur' }
+                ],
+                county: [
+                    { required: true, message: '请选择区县', trigger: 'blur' }
+                ],
+                town: [
+                    { required: true, message: '请输入乡镇', trigger: 'blur' }
                 ]
             },
             //编辑界面数据
             editForm: {
-                id: 0,
-                name: '',
-                locationDescription: '',
-                introduction: '',
-                history: '',
-                naturalFeatures: '',
-                otherComments: '',
-                xLat: 0,
-                yLng: 0,
-                county: '',
-                town: '',
-                yuKou: ''
             },
             addFormVisible: false,//新增界面是否显示
             addLoading: false,
             addFormRules: {
                 name: [
-                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                    { required: true, message: '请输入名称', trigger: 'blur' }
+                ],
+                xLat: [
+                    { required: true, message: '请输入纬度', trigger: 'blur' }
+                ],
+                yLng: [
+                    { required: true, message: '请输入经度', trigger: 'blur' }
+                ],
+                county: [
+                    { required: true, message: '请选择区县', trigger: 'blur' }
+                ],
+                town: [
+                    { required: true, message: '请选择乡镇', trigger: 'blur' }
                 ]
             },
             //新增界面数据
             addForm: {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
+            },
+            formInitVal: {
+                id: 0,
+                name: null,
+                locationDescription: '',
+                introduction: '',
+                history: '',
+                naturalFeatures: '',
+                otherComments: '',
+                xLat: null,
+                yLng: null,
+                county: null,
+                town: null,
+                yuKou: null
             }
-
         }
     },
     methods: {
@@ -83,7 +103,7 @@ export default {
                 });
             });
         },
-        getDataTotal() {
+        refreshData() {
             let para = {
                 name: this.filters.name
             };
@@ -110,31 +130,33 @@ export default {
                 let para = { id: row.id };
                 removeData(para).then((res) => {
                     this.listLoading = false;
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.getDataList();
+                    if (res.data.success) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message({
+                            message: '删除出错',
+                            type: 'error'
+                        });
+                    }
+                    this.refreshData();
                 });
-            }).catch(() => {
-
+            }).catch((error) => {
+                console.info(error);
             });
         },
         //显示编辑界面
         handleEdit: function (index, row) {
             this.editFormVisible = true;
+            this.editForm = this.formInitVal;
             this.editForm = Object.assign({}, row);
         },
         //显示新增界面
         handleAdd: function () {
             this.addFormVisible = true;
-            this.addForm = {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            };
+            this.addForm = this.formInitVal;
         },
         //编辑
         editSubmit: function () {
@@ -143,16 +165,22 @@ export default {
                     this.$confirm('确认提交吗？', '提示', {}).then(() => {
                         this.editLoading = true;
                         let para = Object.assign({}, this.editForm);
-                        para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
                         editData(para).then((res) => {
                             this.editLoading = false;
-                            this.$message({
-                                message: '提交成功',
-                                type: 'success'
-                            });
+                            if (res.data.success) {
+                                this.$message({
+                                    message: '更新成功',
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message({
+                                    message: '更新出错',
+                                    type: 'error'
+                                });
+                            }
                             this.$refs['editForm'].resetFields();
                             this.editFormVisible = false;
-                            this.getDataList();
+                            this.refreshData();
                         });
                     });
                 }
@@ -165,16 +193,22 @@ export default {
                     this.$confirm('确认提交吗？', '提示', {}).then(() => {
                         this.addLoading = true;
                         let para = Object.assign({}, this.addForm);
-                        para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
                         addData(para).then((res) => {
                             this.addLoading = false;
-                            this.$message({
-                                message: '提交成功',
-                                type: 'success'
-                            });
+                            if (res.data.success) {
+                                this.$message({
+                                    message: '添加成功',
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message({
+                                    message: '添加出错',
+                                    type: 'error'
+                                });
+                            }
                             this.$refs['addForm'].resetFields();
                             this.addFormVisible = false;
-                            this.getDataList();
+                            this.refreshData();
                         });
                     });
                 }
@@ -185,6 +219,6 @@ export default {
         }
     },
     mounted() {
-        this.getDataTotal();
+        this.refreshData();
     }
 }

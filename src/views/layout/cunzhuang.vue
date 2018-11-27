@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="名称"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getDataList">查询</el-button>
+					<el-button type="primary" v-on:click="refreshData">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
@@ -53,23 +53,38 @@
 				<el-form-item label="名称" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="位置描述">
-					<el-input type="textarea" v-model="editForm.locationDescription"></el-input>
-				</el-form-item>
 				<el-form-item label="简介">
 					<el-input type="textarea" v-model="editForm.introduction"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
+				<el-form-item label="纬度" prop="xLat">
+					<el-input v-model="editForm.xLat" type="number"></el-input>
 				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
+				<el-form-item label="经度" prop="yLng">
+					<el-input v-model="editForm.yLng" type="number"></el-input>
 				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+				<el-form-item label="区县" prop="county">
+					<el-select v-model="editForm.county" placeholder="请选择区县">
+						<el-option label="长安区" value="1"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="乡镇" prop="town">
+					<el-select v-model="editForm.town" placeholder="请选择乡镇">
+						<el-option label="滦镇街道" value="1"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="峪口">
+					<el-select v-model="editForm.yuKou" placeholder="请选择峪口">
+						<el-option label="扯袍峪" value="11"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="位置描述">
+					<el-input type="textarea" v-model="editForm.locationDescription"></el-input>
+				</el-form-item>
+				<el-form-item label="人文历史">
+					<el-input type="textarea" v-model="editForm.history"></el-input>
+				</el-form-item>
+				<el-form-item label="其他说明">
+					<el-input type="textarea" v-model="editForm.otherComments"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -79,25 +94,43 @@
 		</el-dialog>
 
 		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+		<el-dialog title="新增" custom-class="el-dialog--small" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="名称" prop="name">
 					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
+				<el-form-item label="简介">
+					<el-input type="textarea" v-model="addForm.introduction"></el-input>
 				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
+				<el-form-item label="纬度" prop="xLat">
+					<el-input v-model="addForm.xLat" type="number"></el-input>
 				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+				<el-form-item label="经度" prop="yLng">
+					<el-input v-model="addForm.yLng" type="number"></el-input>
 				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="addForm.addr"></el-input>
+				<el-form-item label="区县" prop="county">
+					<el-select v-model="addForm.county" placeholder="请选择区县">
+						<el-option label="长安区" value="1"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="乡镇" prop="town">
+					<el-select v-model="addForm.town" placeholder="请选择乡镇">
+						<el-option label="滦镇街道" value="1"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="峪口">
+					<el-select v-model="addForm.yuKou" placeholder="请选择峪口">
+						<el-option label="扯袍峪" value="11"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="位置描述">
+					<el-input type="textarea" v-model="addForm.locationDescription"></el-input>
+				</el-form-item>
+				<el-form-item label="人文历史">
+					<el-input type="textarea" v-model="addForm.history"></el-input>
+				</el-form-item>
+				<el-form-item label="其他说明">
+					<el-input type="textarea" v-model="addForm.otherComments"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

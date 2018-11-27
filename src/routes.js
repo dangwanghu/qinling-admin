@@ -1,14 +1,17 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Main from './views/Main.vue'
-import Table from './views/nav1/Table.vue'
 import Form from './views/nav1/Form.vue'
 import CunZhuang from './views/layout/cunzhuang.vue'
 import JingDian from './views/topic/jingdian.vue'
 import ShanFeng from './views/topic/shanfeng.vue'
 import YuKou from './views/topic/yukou.vue'
 import ZongJiao from './views/topic/zongjiao.vue'
+import JianYi from './views/mutual/jianyi.vue'
+import JiuCuo from './views/mutual/jiucuo.vue'
+import JuBao from './views/mutual/jubao.vue'
+import User from './views/mutual/user.vue'
+import FaGui from './views/policy/fagui.vue'
 
 let routes = [
     {
@@ -27,11 +30,9 @@ let routes = [
         path: '/',
         component: Home,
         name: '基本示例',
-        iconCls: 'el-icon-message',//图标样式class
+        iconCls: 'el-icon-message',
         children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
-            // { path: '/table', component: Table, name: '表格' },
-            { path: '/form', component: Form, name: '表单' },
+            { path: '/form', component: Form, name: '表单' }
         ]
     },
     {
@@ -55,16 +56,35 @@ let routes = [
             { path: '/yukou', component: YuKou, name: '峪口管理' }
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,
-    //     children: [
-    //         { path: '/page6', component: Page6, name: '导航三' }
-    //     ]
-    // },
+    {
+        path: '/',
+        component: Home,
+        name: '政策管理',
+        iconCls: 'el-icon-document',
+        children: [
+            { path: '/fagui', component: FaGui, name: '法规管理' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '用户管理',
+        iconCls: 'el-icon-share',
+        children: [
+            { path: '/user', component: User, name: 'APP用户管理' },
+            { path: '/jubao', component: JuBao, name: '举报管理' },
+            { path: '/jianyi', component: JianYi, name: '建议管理' },
+            { path: '/jiucuo', component: JiuCuo, name: '纠错管理' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '系统管理',
+        iconCls: 'el-icon-setting',
+        children: [
+        ]
+    },
     {
         path: '*',
         hidden: true,
