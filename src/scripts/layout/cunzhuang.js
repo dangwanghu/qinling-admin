@@ -21,10 +21,10 @@ export default {
                     { required: true, message: '请输入名称', trigger: 'blur' }
                 ],
                 xLat: [
-                    { required: true, message: '请输入纬度', trigger: 'blur' }
+                    { required: true, message: '请输入纬度' }
                 ],
                 yLng: [
-                    { required: true, message: '请输入经度', trigger: 'blur' }
+                    { required: true, message: '请输入经度' }
                 ],
                 county: [
                     { required: true, message: '请选择区县', trigger: 'blur' }
