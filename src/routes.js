@@ -4,7 +4,6 @@ import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
 import Form from './views/nav1/Form.vue'
-import Test from './views/nav2/Test.vue'
 import CunZhuang from './views/layout/cunzhuang.vue'
 import JingDian from './views/topic/jingdian.vue'
 import ShanFeng from './views/topic/shanfeng.vue'
@@ -33,15 +32,6 @@ let routes = [
             { path: '/main', component: Main, name: '主页', hidden: true },
             // { path: '/table', component: Table, name: '表格' },
             { path: '/form', component: Form, name: '表单' },
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: 'Vuex',
-        iconCls: 'el-icon-time',
-        children: [
-            { path: '/test', component: Test, name: 'Test页面' }
         ]
     },
     {

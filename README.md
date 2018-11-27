@@ -26,7 +26,6 @@ npm run build
     * mock
     * styles
     * views - your pages
-    * vuex
     * App.vue
     * main.js - main file
     * routes.js

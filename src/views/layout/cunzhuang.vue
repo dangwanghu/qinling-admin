@@ -147,7 +147,6 @@
 					town: '',
 					yuKou: ''
 				},
-
 				addFormVisible: false,//新增界面是否显示
 				addLoading: false,
 				addFormRules: {
