@@ -3,6 +3,7 @@ import * as ZongJiaoApi from './zongjiao.api';
 import * as JianDianApi from './jingdian.api';
 import * as ShanFengApi from './shanfeng.api';
 import * as YukouApi from './yukou.api';
+import * as DictApi from './dict.api';
 import * as Constants from '../common/constants';
 
 export default function getApi(name) {
@@ -17,5 +18,7 @@ export default function getApi(name) {
             return JianDianApi;
         case Constants.ZONGJIAO:
             return ZongJiaoApi;
+        case Constants.DICT:
+            return DictApi;
     }
 }

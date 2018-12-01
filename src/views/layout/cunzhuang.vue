@@ -54,7 +54,7 @@
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="简介">
-					<el-input type="textarea" v-model="editForm.introduction"></el-input>
+					<el-input :rows="5" type="textarea" v-model="editForm.introduction"></el-input>
 				</el-form-item>
 				<el-form-item label="纬度" prop="xLat">
 					<el-input v-model="editForm.xLat" type="number"></el-input>
@@ -63,28 +63,28 @@
 					<el-input v-model="editForm.yLng" type="number"></el-input>
 				</el-form-item>
 				<el-form-item label="区县" prop="county">
-					<el-select v-model="editForm.county" placeholder="请选择区县">
-						<el-option label="长安区" value="1"></el-option>
+					<el-select v-model="editForm.county" placeholder="请选择区县" @change="eChangeQuXian">
+						<el-option :label="country.name" :value="country.id" v-for="country in countries"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="乡镇" prop="town">
-					<el-select v-model="editForm.town" placeholder="请选择乡镇">
-						<el-option label="滦镇街道" value="1"></el-option>
+					<el-select v-model="editForm.town" placeholder="请选择乡镇" @change="eChangeXiangZhen">
+						<el-option :label="town.name" :value="town.id" v-for="town in towns"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="峪口">
 					<el-select v-model="editForm.yuKou" placeholder="请选择峪口">
-						<el-option label="扯袍峪" value="11"></el-option>
+						<el-option :label="yukou.name" :value="yukou.id" v-for="yukou in yukous"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="位置描述">
-					<el-input type="textarea" v-model="editForm.locationDescription"></el-input>
+					<el-input :rows="3" type="textarea" v-model="editForm.locationDescription"></el-input>
 				</el-form-item>
 				<el-form-item label="人文历史">
-					<el-input type="textarea" v-model="editForm.history"></el-input>
+					<el-input :rows="5" type="textarea" v-model="editForm.history"></el-input>
 				</el-form-item>
 				<el-form-item label="其他说明">
-					<el-input type="textarea" v-model="editForm.otherComments"></el-input>
+					<el-input :rows="5" type="textarea" v-model="editForm.otherComments"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -100,7 +100,7 @@
 					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="简介">
-					<el-input type="textarea" v-model="addForm.introduction"></el-input>
+					<el-input :rows="5" type="textarea" v-model="addForm.introduction"></el-input>
 				</el-form-item>
 				<el-form-item label="纬度" prop="xLat">
 					<el-input v-model="addForm.xLat" type="number"></el-input>
@@ -109,28 +109,28 @@
 					<el-input v-model="addForm.yLng" type="number"></el-input>
 				</el-form-item>
 				<el-form-item label="区县" prop="county">
-					<el-select v-model="addForm.county" placeholder="请选择区县">
-						<el-option label="长安区" value="1"></el-option>
+					<el-select v-model="addForm.county" placeholder="请选择区县" @change="changeQuXian">
+						<el-option :label="country.name" :value="country.id" v-for="country in countries"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="乡镇" prop="town">
-					<el-select v-model="addForm.town" placeholder="请选择乡镇">
-						<el-option label="滦镇街道" value="1"></el-option>
+					<el-select v-model="addForm.town" placeholder="请选择乡镇" @change="changeXiangZhen">
+						<el-option :label="town.name" :value="town.id" v-for="town in towns"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="峪口">
 					<el-select v-model="addForm.yuKou" placeholder="请选择峪口">
-						<el-option label="扯袍峪" value="11"></el-option>
+						<el-option :label="yukou.name" :value="yukou.id" v-for="yukou in yukous"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="位置描述">
-					<el-input type="textarea" v-model="addForm.locationDescription"></el-input>
+					<el-input :rows="3" type="textarea" v-model="addForm.locationDescription"></el-input>
 				</el-form-item>
 				<el-form-item label="人文历史">
-					<el-input type="textarea" v-model="addForm.history"></el-input>
+					<el-input :rows="5" type="textarea" v-model="addForm.history"></el-input>
 				</el-form-item>
 				<el-form-item label="其他说明">
-					<el-input type="textarea" v-model="addForm.otherComments"></el-input>
+					<el-input :rows="5" type="textarea" v-model="addForm.otherComments"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

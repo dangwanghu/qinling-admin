@@ -1,7 +1,8 @@
-import util from '../../common/js/util'
 import * as Constants from '../../common/constants';
 import getApi from '../../api/api';
 const { getDataListPage, getDataTotal, removeData, editData, addData } = getApi(Constants.CUNZHUANG)
+const { getCountryData, getTownData } = getApi(Constants.DICT)
+const { getYuKouData } = getApi(Constants.YUKOU)
 
 export default {
     data() {
@@ -27,10 +28,10 @@ export default {
                     { required: true, message: '请输入经度' }
                 ],
                 county: [
-                    { required: true, message: '请选择区县', trigger: 'blur' }
+                    { type: 'number', required: true, message: '请选择区县', trigger: 'blur' }
                 ],
                 town: [
-                    { required: true, message: '请输入乡镇', trigger: 'blur' }
+                    { type: 'number', required: true, message: '请选择乡镇', trigger: 'blur' }
                 ]
             },
             //编辑界面数据
@@ -49,15 +50,16 @@ export default {
                     { required: true, message: '请输入经度', trigger: 'blur' }
                 ],
                 county: [
-                    { required: true, message: '请选择区县', trigger: 'blur' }
+                    { type: 'number', required: true, message: '请选择区县', trigger: 'blur' }
                 ],
                 town: [
-                    { required: true, message: '请选择乡镇', trigger: 'blur' }
+                    { type: 'number', required: true, message: '请选择乡镇', trigger: 'blur' }
                 ]
             },
             //新增界面数据
             addForm: {
             },
+            isEditIniting: false,
             formInitVal: {
                 id: 0,
                 name: null,
@@ -71,7 +73,10 @@ export default {
                 county: null,
                 town: null,
                 yuKou: null
-            }
+            },
+            countries: [],
+            towns: [],
+            yukous: []
         }
     },
     methods: {
@@ -83,6 +88,25 @@ export default {
         handleCurrentChange(val) {
             this.page = val;
             this.getDataList();
+        },
+        changeQuXian(val) {
+            this.getTowns(val);
+            this.addForm.town = null;
+            this.addForm.yuKou = null;
+        },
+        changeXiangZhen(val) {
+            this.getYuKous(val);
+            this.addForm.yuKou = null;
+        },
+        eChangeQuXian(val) {
+            if (!this.isEditIniting && this.editFormVisible) {
+                this.getTowns(val);
+            }
+        },
+        eChangeXiangZhen(val) {
+            if (!this.isEditIniting && this.editFormVisible) {
+                this.getYuKous(val);
+            }
         },
         getDataList() {
             let para = {
@@ -121,6 +145,41 @@ export default {
                 });
             });
         },
+        getCountries() {
+            let para = {
+            };
+            getCountryData(para).then((res) => {
+                this.countries = res.data.data;
+            }).catch(function (error) {
+                console.info(error);
+            });
+        },
+        getTowns(quxian) {
+            let para = {
+                quxian: quxian
+            };
+            getTownData(para).then((res) => {
+                this.towns = res.data.data;
+                if (this.editFormVisible) {
+                    this.findTownId();
+                }
+            }).catch(function (error) {
+                console.info(error);
+            });
+        },
+        getYuKous(xiangzhen) {
+            let para = {
+                xiangzhen: xiangzhen
+            };
+            getYuKouData(para).then((res) => {
+                this.yukous = res.data.data;
+                if (this.editFormVisible) {
+                    this.findYuKouId();
+                }
+            }).catch(function (error) {
+                console.info(error);
+            });
+        },
         //删除
         handleDel: function (index, row) {
             this.$confirm('确认删除该记录吗?', '提示', {
@@ -152,6 +211,48 @@ export default {
             this.editFormVisible = true;
             this.editForm = this.formInitVal;
             this.editForm = Object.assign({}, row);
+            this.isEditIniting = true;
+            this.editInit();
+        },
+        editInit() {
+            this.findCountryId();
+        },
+        findYuKouId() {
+            let isFindYuKou = false;
+            this.yukous.forEach(yukou => {
+                if (yukou.name == this.editForm.yuKou) {
+                    this.editForm.yuKou = yukou.id;
+                    isFindYuKou = true;
+                    return;
+                }
+            });
+            if (!isFindYuKou) {
+                this.editForm.yuKou = null;
+            }
+            this.isEditIniting = false;
+        },
+        findTownId() {
+            let isFindTown = false;
+            this.towns.forEach(town => {
+                if (town.name == this.editForm.town) {
+                    this.editForm.town = town.id;
+                    isFindTown = true;
+                    this.getYuKous(town.id);
+                    return;
+                }
+            });
+            if (!isFindTown) {
+                this.editForm.town = null;
+            }
+        },
+        findCountryId() {
+            this.countries.forEach(county => {
+                if (county.name == this.editForm.county) {
+                    this.editForm.county = county.id;
+                    this.getTowns(county.id);
+                    return;
+                }
+            });
         },
         //显示新增界面
         handleAdd: function () {
@@ -219,6 +320,7 @@ export default {
         }
     },
     mounted() {
+        this.getCountries();
         this.refreshData();
     }
 }
