@@ -1,7 +1,6 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Form from './views/nav1/Form.vue'
 import CunZhuang from './views/layout/cunzhuang.vue'
 import JingDian from './views/topic/jingdian.vue'
 import ShanFeng from './views/topic/shanfeng.vue'
@@ -25,15 +24,6 @@ let routes = [
         component: NotFound,
         name: '',
         hidden: true
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '基本示例',
-        iconCls: 'el-icon-message',
-        children: [
-            { path: '/form', component: Form, name: '表单' }
-        ]
     },
     {
         path: '/',

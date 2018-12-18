@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let dataServer = '/dictapi'
+let dataServer = process.env.DICT_BASE_URL;
 
 export const getCountryData = params => { return axios.get(`${dataServer}/dict/quxian/list`, { params: params }); };
 

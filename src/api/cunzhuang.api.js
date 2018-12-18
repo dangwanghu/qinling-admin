@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-let base = '';
-let dataServer = '/cunzhuangapi'
+let dataServer = process.env.CUNZHUANG_BASE_URL;
 
 export const getDataListPage = params => { return axios.get(`${dataServer}/cunzhuang/list`, { params: params }); };
 
