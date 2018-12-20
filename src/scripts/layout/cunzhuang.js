@@ -218,6 +218,10 @@ export default {
             this.findCountryId();
         },
         findYuKouId() {
+            if(!this.editForm.yuKou) {
+                this.isEditIniting = false;
+                return;
+            }
             let isFindYuKou = false;
             this.yukous.forEach(yukou => {
                 if (yukou.name == this.editForm.yuKou) {
@@ -232,6 +236,10 @@ export default {
             this.isEditIniting = false;
         },
         findTownId() {
+            if(!this.editForm.town) {
+                this.isEditIniting = false;
+                return;
+            }
             let isFindTown = false;
             this.towns.forEach(town => {
                 if (town.name == this.editForm.town) {
@@ -246,6 +254,10 @@ export default {
             }
         },
         findCountryId() {
+            if(!this.editForm.county) {
+                this.isEditIniting = false;
+                return;
+            }
             this.countries.forEach(county => {
                 if (county.name == this.editForm.county) {
                     this.editForm.county = county.id;
