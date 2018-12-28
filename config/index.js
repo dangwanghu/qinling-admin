@@ -29,15 +29,20 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/cunzhuangapi': {
-        // target: 'http://118.24.178.133:8080/qinling',
         target: 'http://localhost:3000/qinling-server',
         changeOrigin: true,
         pathRewrite: {
           '^/cunzhuangapi': ''
         }
       },
+      '/jingdianapi': {
+        target: 'http://localhost:3000/qinling-server',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/jingdianapi': ''
+        }
+      },
       '/dictapi': {
-        // target: 'http://118.24.178.133:8080/qinling',
         target: 'http://localhost:3000/qinling-server',
         changeOrigin: true,
         pathRewrite: {
@@ -45,7 +50,6 @@ module.exports = {
         }
       },
       '/yukouapi': {
-        // target: 'http://118.24.178.133:8080/qinling',
         target: 'http://localhost:3000/qinling-server',
         changeOrigin: true,
         pathRewrite: {
