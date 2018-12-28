@@ -1,7 +1,7 @@
 import * as Constants from '../../common/constants';
 import getApi from '../../api/api';
-const { getDataListPage, getDataTotal, removeData, editData, addData } = getApi(Constants.SHANFENG)
-const { getCountryData } = getApi(Constants.DICT)
+const { getYuKouData, getDataTotal, removeData, editData, addData } = getApi(Constants.YUKOU)
+const { getCountryData, getTownData } = getApi(Constants.DICT)
 
 export default {
     data() {
@@ -28,6 +28,9 @@ export default {
                 ],
                 county: [
                     { type: 'number', required: true, message: '请选择区县', trigger: 'blur' }
+                ],
+                town: [
+                    { type: 'number', required: true, message: '请选择乡镇', trigger: 'blur' }
                 ]
             },
             //编辑界面数据
@@ -47,6 +50,9 @@ export default {
                 ],
                 county: [
                     { type: 'number', required: true, message: '请选择区县', trigger: 'blur' }
+                ],
+                town: [
+                    { type: 'number', required: true, message: '请选择乡镇', trigger: 'blur' }
                 ]
             },
             //新增界面数据
@@ -63,9 +69,11 @@ export default {
                 otherComments: '',
                 xLat: null,
                 yLng: null,
-                county: null
+                county: null,
+                town: null
             },
-            countries: []
+            countries: [],
+            towns: []
         }
     },
     methods: {
@@ -78,6 +86,15 @@ export default {
             this.page = val;
             this.getDataList();
         },
+        changeQuXian(val) {
+            this.getTowns(val);
+            this.addForm.town = null;
+        },
+        eChangeQuXian(val) {
+            if (!this.isEditIniting && this.editFormVisible) {
+                this.getTowns(val);
+            }
+        },
         getDataList() {
             let para = {
                 skip: (this.page - 1) * 10,
@@ -86,7 +103,7 @@ export default {
             };
             this.listLoading = true;
             let self = this;
-            getDataListPage(para).then((res) => {
+            getYuKouData(para).then((res) => {
                 this.data = res.data.data;
                 this.listLoading = false;
             }).catch(function (error) {
@@ -120,6 +137,19 @@ export default {
             };
             getCountryData(para).then((res) => {
                 this.countries = res.data.data;
+            }).catch(function (error) {
+                console.info(error);
+            });
+        },
+        getTowns(quxian) {
+            let para = {
+                quxian: quxian
+            };
+            getTownData(para).then((res) => {
+                this.towns = res.data.data;
+                if (this.editFormVisible) {
+                    this.findTownId();
+                }
             }).catch(function (error) {
                 console.info(error);
             });
@@ -161,6 +191,24 @@ export default {
         editInit() {
             this.findCountryId();
         },
+        findTownId() {
+            if(!this.editForm.town) {
+                this.isEditIniting = false;
+                return;
+            }
+            let isFindTown = false;
+            this.towns.forEach(town => {
+                if (town.name == this.editForm.town) {
+                    this.editForm.town = town.id;
+                    isFindTown = true;
+                    return;
+                }
+            });
+            if (!isFindTown) {
+                this.editForm.town = null;
+            }
+            this.isEditIniting = false;
+        },
         findCountryId() {
             if(!this.editForm.county) {
                 this.isEditIniting = false;
@@ -169,10 +217,10 @@ export default {
             this.countries.forEach(county => {
                 if (county.name == this.editForm.county) {
                     this.editForm.county = county.id;
+                    this.getTowns(county.id);
                     return;
                 }
             });
-            this.isEditIniting = false;
         },
         //显示新增界面
         handleAdd: function () {
