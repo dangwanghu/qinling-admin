@@ -6,4 +6,6 @@ module.exports = {
   SHANFENG_BASE_URL: '"http://118.24.178.133:8080/qinling"',
   YUKOU_BASE_URL: '"http://118.24.178.133:8080/qinling"',
   ZONGJIAO_BASE_URL: '"http://118.24.178.133:8080/qinling"',
+  MANAGER_BASE_URL: '"http://118.24.178.133:8080/qinling"',
+  ROLE_BASE_URL: '"http://118.24.178.133:8080/qinling"'
 }

@@ -4,6 +4,8 @@ import * as JianDianApi from './jingdian.api';
 import * as ShanFengApi from './shanfeng.api';
 import * as YukouApi from './yukou.api';
 import * as DictApi from './dict.api';
+import * as ManagerApi from './manager.api';
+import * as RoleApi from './role.api';
 import * as Constants from '../common/constants';
 
 export default function getApi(name) {
@@ -20,5 +22,9 @@ export default function getApi(name) {
             return ZongJiaoApi;
         case Constants.DICT:
             return DictApi;
+        case Constants.MANAGER:
+            return ManagerApi;
+        case Constants.ROLE:
+            return RoleApi;
     }
 }

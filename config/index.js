@@ -69,6 +69,20 @@ module.exports = {
         pathRewrite: {
           '^/zongjiaoapi': ''
         }
+      },
+      '/managerapi': {
+        target: 'http://localhost:3000/qinling-server',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/managerapi': ''
+        }
+      },
+      '/roleapi': {
+        target: 'http://localhost:3000/qinling-server',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/roleapi': ''
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

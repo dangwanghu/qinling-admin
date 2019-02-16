@@ -9,4 +9,6 @@ module.exports = merge(prodEnv, {
   SHANFENG_BASE_URL: '"shanfengapi"',
   YUKOU_BASE_URL: '"yukouapi"',
   ZONGJIAO_BASE_URL: '"zongjiaoapi"',
+  MANAGER_BASE_URL: '"managerapi"',
+  ROLE_BASE_URL: '"roleapi"'
 })

@@ -11,6 +11,8 @@ import JiuCuo from './views/mutual/jiucuo.vue'
 import JuBao from './views/mutual/jubao.vue'
 import User from './views/mutual/user.vue'
 import FaGui from './views/policy/fagui.vue'
+import Manager from './views/system/manager.vue'
+import Role from './views/system/role.vue'
 
 let routes = [
     {
@@ -73,6 +75,8 @@ let routes = [
         name: '系统管理',
         iconCls: 'el-icon-setting',
         children: [
+            { path: '/manager', component: Manager, name: '操作员管理' },
+            { path: '/role', component: Role, name: '角色管理' }
         ]
     },
     {
