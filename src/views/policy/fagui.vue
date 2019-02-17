@@ -9,10 +9,10 @@
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" v-on:click="refreshData">查询</el-button>
+          <el-button type="primary" v-on:click="refreshData" v-show="isHasPermission('\'fggl_scan\'')">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button type="primary" @click="handleAdd" v-show="isHasPermission('\'fggl_new\'')">新增</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -48,10 +48,10 @@
         sortable
         :show-overflow-tooltip="true"
       ></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="200" v-if="isHasPermission('\'fggl_edit\'') || isHasPermission('\'fggl_delete\'')">
         <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger"  size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)" v-show="isHasPermission('\'fggl_edit\'')">编辑</el-button>
+          <el-button type="danger"  size="small" @click="handleDel(scope.$index, scope.row)" v-show="isHasPermission('\'fggl_delete\'')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

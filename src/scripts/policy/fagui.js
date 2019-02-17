@@ -79,6 +79,16 @@ export default {
 
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         handleAdd() {//新增法规按钮
             this.addFormVisible = true;
             this.addForm = this.formInitVal;
@@ -233,6 +243,13 @@ export default {
      // 在vue的生命周期的mounted中调用渲染列表
     mounted() {
         // 在vue的生命周期的mounted中调用渲染列表
-        this.refreshData();
+        if (this.isHasPermission("'fggl_scan'")) {
+            this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 }
