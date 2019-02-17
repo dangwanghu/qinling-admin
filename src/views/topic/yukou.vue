@@ -7,10 +7,10 @@
 					<el-input v-model="filters.name" placeholder="名称"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="refreshData">查询</el-button>
+					<el-button type="primary" v-on:click="refreshData" v-show="isHasPermission('\'ykgl_scan\'')">查询</el-button>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增</el-button>
+					<el-button type="primary" @click="handleAdd" v-show="isHasPermission('\'ykgl_new\'')">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -31,10 +31,10 @@
 			</el-table-column>
 			<el-table-column prop="town" label="所属乡镇" min-width="120" sortable>
 			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" width="150" v-if="isHasPermission('\'ykgl_edit\'') || isHasPermission('\'ykgl_delete\'')">
 				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					<el-button size="small" @click="handleEdit(scope.$index, scope.row)" v-show="isHasPermission('\'ykgl_edit\'')">编辑</el-button>
+					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-show="isHasPermission('\'ykgl_delete\'')">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

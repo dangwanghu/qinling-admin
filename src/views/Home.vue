@@ -2,7 +2,8 @@
 	<el-row class="container">
 		<el-col :span="24" class="header">
 			<el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-				{{collapsed?'QL':sysName}}
+				<span v-show="collapsed">QL</span>
+				<img :src="logoUrl" v-show="!collapsed"></img>
 			</el-col>
 			<el-col :span="10">
 				<div class="tools" @click.prevent="collapse">
@@ -71,6 +72,7 @@
 				sysName:'QINLING-ADMIN',
 				collapsed:false,
 				sysUserName: '',
+				logoUrl: require('@/assets/logo.png'),
 				form: {
 					name: '',
 					region: '',

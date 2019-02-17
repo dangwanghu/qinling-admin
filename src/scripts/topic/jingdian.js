@@ -80,6 +80,16 @@ export default {
         }
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         formatXY: function (row, column) {
             let value = column.property == 'xLat' ? row.xLat : row.yLng;
             value = "" + value;
@@ -332,7 +342,14 @@ export default {
         }
     },
     mounted() {
-        this.getCountries();
-        this.refreshData();
+        if (this.isHasPermission("'jdgl_scan'")) {
+            this.getCountries();
+            this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 }

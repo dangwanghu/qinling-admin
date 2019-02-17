@@ -7,6 +7,10 @@ import * as DictApi from './dict.api';
 import * as ManagerApi from './manager.api';
 import * as RoleApi from './role.api';
 import * as UserApi from './user.api';
+import * as JianYiApi from './jianyi.api';
+import * as JuBaoApi from './jubao.api';
+import * as JiuCuoApi from './jiucuo.api';
+import * as FaGuiApi from './fagui.api';
 import * as Constants from '../common/constants';
 
 export default function getApi(name) {
@@ -29,5 +33,13 @@ export default function getApi(name) {
             return RoleApi;
         case Constants.USER:
             return UserApi;
+        case Constants.FAGUI:
+            return FaGuiApi;
+        case Constants.JIANYI:
+            return JianYiApi;
+        case Constants.JUBAO:
+            return JuBaoApi;
+        case Constants.JIUCUO   :
+            return JiuCuoApi;
     }
 }

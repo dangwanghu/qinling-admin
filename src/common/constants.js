@@ -7,3 +7,7 @@ export const DICT = 'dict';
 export const MANAGER = 'manager';
 export const ROLE = 'role';
 export const USER = 'user';
+export const FAGUI ='fagui';
+export const JIANYI='jianyi';
+export const JUBAO='jubao';
+export const JIUCUO ='jiucuo';

@@ -1,6 +1,6 @@
 <template>
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">秦岭后台管理系统</h3>
+    <h3 class="title"><img :src="logLogoUrl"></img></h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="邮箱"></el-input>
     </el-form-item>
@@ -22,6 +22,7 @@
   export default {
     data() {
       return {
+        logLogoUrl: require('@/assets/loginlogo.png'),
         logining: false,
         ruleForm2: {
           account: '',
@@ -84,9 +85,13 @@
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
     .title {
-      margin: 0px auto 40px auto;
+      margin: 0px auto 20px auto;
       text-align: center;
       color: #505458;
+
+      img {
+        width: 300px;
+      }
     }
     .remember {
       margin: 0px 0px 35px 0px;

@@ -14,17 +14,6 @@ import FaGui from './views/policy/fagui.vue'
 import Manager from './views/system/manager.vue'
 import Role from './views/system/role.vue'
 
-function isHasPermission(code) {
-    let user = sessionStorage.getItem('user');
-    if (user) {
-        user = JSON.parse(user);
-        if (user.roleScope && user.roleScope.indexOf(code) != -1) {
-            return false;
-        }
-    }
-    return true;
-}
-
 function isHasFolderPermission(codes) {
     let user = sessionStorage.getItem('user');
     let hidden = true;
@@ -64,7 +53,7 @@ let routes = [
         iconCls: 'el-icon-menu',
         hidden: isHasFolderPermission(["'czgl'"]),
         children: [
-            { path: '/cunzhuang', component: CunZhuang, name: '村庄管理', hidden: isHasPermission("'czgl'")}
+            { path: '/cunzhuang', component: CunZhuang, name: '村庄管理', hidden: isHasFolderPermission(["'czgl_scan'", "'czgl_new'", "'czgl_edit'", "'czgl_delete'"])}
         ]
     },
     {
@@ -74,10 +63,10 @@ let routes = [
         iconCls: 'el-icon-picture',
         hidden: isHasFolderPermission(["'jdgl'", "'zjgl'", "'sfgl'", "'ykgl'"]),
         children: [
-            { path: '/jingdian', component: JingDian, name: '景点管理', hidden: isHasPermission("'jdgl'")},
-            { path: '/zongjiao', component: ZongJiao, name: '宗教管理', hidden: isHasPermission("'zjgl'")},
-            { path: '/shanfeng', component: ShanFeng, name: '山峰管理', hidden: isHasPermission("'sfgl'")},
-            { path: '/yukou', component: YuKou, name: '峪口管理', hidden: isHasPermission("'ykgl'")}
+            { path: '/jingdian', component: JingDian, name: '景点管理', hidden: isHasFolderPermission(["'jdgl_scan'", "'jdgl_new'", "'jdgl_edit'", "'jdgl_delete'"])},
+            { path: '/zongjiao', component: ZongJiao, name: '宗教管理', hidden: isHasFolderPermission(["'zjgl_scan'", "'zjgl_new'", "'zjgl_edit'", "'zjgl_delete'"])},
+            { path: '/shanfeng', component: ShanFeng, name: '山峰管理', hidden: isHasFolderPermission(["'sfgl_scan'", "'sfgl_new'", "'sfgl_edit'", "'czgl_delete'"])},
+            { path: '/yukou', component: YuKou, name: '峪口管理', hidden: isHasFolderPermission(["'ykgl_scan'", "'ykgl_new'", "'ykgl_edit'", "'ykgl_delete'"])}
         ]
     },
     {
@@ -87,7 +76,7 @@ let routes = [
         iconCls: 'el-icon-document',
         hidden: isHasFolderPermission(["'fggl'"]),
         children: [
-            { path: '/fagui', component: FaGui, name: '法规管理', hidden: isHasPermission("'fggl'")}
+            { path: '/fagui', component: FaGui, name: '法规管理', hidden: isHasFolderPermission(["'fggl_scan'", "'fggl_new'", "'fggl_edit'", "'fggl_delete'"])}
         ]
     },
     {
@@ -97,10 +86,10 @@ let routes = [
         iconCls: 'el-icon-share',
         hidden: isHasFolderPermission(["'appyhgl'", "'jbgl'", "'jygl'", "'jcgl'"]),
         children: [
-            { path: '/user', component: User, name: 'APP用户管理', hidden: isHasPermission("'appyhgl'")},
-            { path: '/jubao', component: JuBao, name: '举报管理', hidden: isHasPermission("'jbgl'") },
-            { path: '/jianyi', component: JianYi, name: '建议管理', hidden: isHasPermission("'jygl'") },
-            { path: '/jiucuo', component: JiuCuo, name: '纠错管理', hidden: isHasPermission("'jcgl'") }
+            { path: '/user', component: User, name: 'APP用户管理', hidden: isHasFolderPermission(["'appyhgl_scan'", "'appyhgl_enordis'"])},
+            { path: '/jubao', component: JuBao, name: '举报管理', hidden: isHasFolderPermission(["'jbgl_scan'", "'jbgl_handle'", "'jbgl_delete'"])},
+            { path: '/jianyi', component: JianYi, name: '建议管理', hidden: isHasFolderPermission(["'jygl_scan'", "'jygl_handle'", "'jygl_delete'"])},
+            { path: '/jiucuo', component: JiuCuo, name: '纠错管理', hidden: isHasFolderPermission(["'jcgl_scan'", "'jcgl_handle'", "'jcgl_delete'"])}
         ]
     },
     {
@@ -110,8 +99,8 @@ let routes = [
         iconCls: 'el-icon-setting',
         hidden: isHasFolderPermission(["'czygl'", "'jsgl'"]),
         children: [
-            { path: '/manager', component: Manager, name: '操作员管理', hidden: isHasPermission("'czygl'")},
-            { path: '/role', component: Role, name: '角色管理', hidden: isHasPermission("'jsgl'")}
+            { path: '/manager', component: Manager, name: '操作员管理', hidden: isHasFolderPermission(["'czygl_scan'", "'czygl_new'", "'czygl_edit'", "'czygl_enordis'", "'czygl_delete'"])},
+            { path: '/role', component: Role, name: '角色管理', hidden: isHasFolderPermission(["'jsgl_scan'", "'jsgl_new'", "'jsgl_edit'", "'jsgl_enordis'", "'jsgl_delete'"])}
         ]
     },
     {
