@@ -13,7 +13,7 @@
           </el-radio-group>
         </el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="refreshData" :formatter="transformStatus">查询</el-button>
+					<el-button type="primary" v-on:click="refreshData" :formatter="transformStatus" v-show="isHasPermission('\'jcgl_scan\'')">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -41,11 +41,11 @@
       <el-table-column prop="submitter" label="提交人 " min-width="150"></el-table-column>
       <el-table-column prop="status" label="状态" min-width="100" ></el-table-column>
     <el-table-column prop="comments" label="处理纠错" min-width="150" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="200" v-if="isHasPermission('\'jcgl_handle\'') || isHasPermission('\'jcgl_delete\'')">
         <template scope="scope">
-          <el-button type="primary" size="small" :disabled='scope.row.status === "已处理"?true:false' 
+          <el-button type="primary" size="small" v-show="isHasPermission('\'jcgl_handle\'')" :disabled='scope.row.status === "已处理"?true:false' 
           @click="handleEdit(scope.$index,scope.row)">{{scope.row.status==='未处理'?'处理建议':scope.row.status}}</el-button>
-          <el-button type="danger"  size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button type="danger"  size="small" v-show="isHasPermission('\'jcgl_delete\'')" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -58,7 +58,7 @@
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
      <el-form-item label="处理建议" prop="comments">
       <!-- <el-col :span="10"> -->
-      <el-input v-model="editForm.comments" type="text"></el-input>
+      <el-input v-model="editForm.comments" type="textarea" :rows="8"></el-input>
       <!-- </el-col> -->
      </el-form-item>
         </el-form>

@@ -27,6 +27,16 @@ export default {
             };
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         //显示对未建议数据执行审核处理(弹出编辑画面)
         handleEdit: function (index, row) {
             this.editForm = Object.assign({}, row);
@@ -148,6 +158,13 @@ export default {
     },
      // 在vue的生命周期的mounted中调用渲染列表
     mounted() {
-        this.refreshData();
+        if (this.isHasPermission("'jcgl_scan'")) {
+            this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 }

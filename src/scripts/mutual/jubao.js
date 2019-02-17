@@ -36,6 +36,16 @@ export default {
     };
   },
   methods: {
+    isHasPermission(code) {
+      let user = sessionStorage.getItem('user');
+      if (user) {
+          user = JSON.parse(user);
+          if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+              return true;
+          }
+      }
+      return false;
+    },
     //状态显示转换
     transformStatus(row, column) {
       return row.status == 1 ? "已处理" : row.status == 0 ? "未处理" : "未知";
@@ -167,6 +177,13 @@ export default {
   },
   // 在vue的生命周期的mounted中调用渲染列表
   mounted() {
-    this.refreshData();
+    if (this.isHasPermission("'jbgl_scan'")) {
+        this.refreshData();
+    } else {
+        this.$message({
+            message: '无权访问，联系管理员',
+            type: 'error'
+        });
+    }
   },
 };

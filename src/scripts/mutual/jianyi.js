@@ -21,6 +21,16 @@ export default {
         };
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         //对未建议数据执行审核处理(弹出编辑画面)
         //显示编辑界面handleEdit
         handleEdit(index, row) {
@@ -146,6 +156,13 @@ export default {
     },
     // 在vue的生命周期的mounted中调用渲染列表
     mounted() {
-        this.refreshData();
+        if (this.isHasPermission("'jygl_scan'")) {
+            this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 };

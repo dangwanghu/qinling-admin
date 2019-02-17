@@ -15,7 +15,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" v-on:click="refreshData" :formatter="transformStatus">查询</el-button>
+          <el-button type="primary" v-on:click="refreshData" :formatter="transformStatus" v-show="isHasPermission('\'jbgl_scan\'')">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -40,7 +40,7 @@
       <el-table-column prop="phone" label="联系方式" width="130"></el-table-column>
         <el-table-column prop="address" label="举报地址" width="250" :show-overflow-tooltip="true"></el-table-column>        
       <el-table-column prop="comments" label="处理举报" min-width="100" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" width="300" v-if="isHasPermission('\'jbgl_handle\'') || isHasPermission('\'jbgl_delete\'')">
         <template scope="scope">
           <el-button
             type="primary"
@@ -48,9 +48,8 @@
             :disabled="scope.row.status === '已处理'? true:false"
             @click="handleEdit(scope.$index,scope.row)"
           >{{scope.row.status==='未处理'?'处理建议':scope.row.status}}</el-button>
-
-          <el-button type="danger" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          <el-button type="primary" size="small" @click="viewimage(scope.$index, scope.row.attachments.replace(/(^\[+)|(\]+$)/g,'').split(','))">查看图片</el-button>
+          <el-button type="danger" size="small" v-show="isHasPermission('\'jbgl_handle\'')" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button type="primary" size="small" v-show="isHasPermission('\'jbgl_delete\'')" @click="viewimage(scope.$index, scope.row.attachments.replace(/(^\[+)|(\]+$)/g,'').split(','))">查看图片</el-button>
 
         </template>
       </el-table-column>
@@ -69,7 +68,7 @@
     <el-dialog v-model="editFormVisible" title :close-on-click-modal="false">
       <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
         <el-form-item label="建议处理" prop="comments">
-            <el-input type="text" v-model="editForm.comments" sortable></el-input>
+            <el-input type="textarea" :rows="8" v-model="editForm.comments" sortable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

@@ -271,7 +271,7 @@ export default {
     mounted() {
         if (this.isHasPermission("'czygl_scan'")) {
             this.getRoles();
-        this.refreshData();
+            this.refreshData();
         } else {
             this.$message({
                 message: '无权访问，联系管理员',

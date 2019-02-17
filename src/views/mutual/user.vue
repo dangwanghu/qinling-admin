@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="昵称或真实姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="refreshData">查询</el-button>
+					<el-button type="primary" v-on:click="refreshData" v-show="isHasPermission('\'appyhgl_scan\'')">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -32,10 +32,10 @@
 			</el-table-column>
 			<el-table-column prop="createTime" label="注册时间" min-width="120" :formatter="formatTime" sortable>
 			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" width="150" v-if="isHasPermission('\'appyhgl_enordis\'')">
 				<template scope="scope">
-					<el-button type="warning" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 0)" v-if="scope.row.status == '1'">禁用</el-button>
-					<el-button type="success" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 1)" v-if="scope.row.status != '1'">启用</el-button>
+					<el-button type="warning" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 0)" v-if="scope.row.status == '1' && isHasPermission('\'appyhgl_enordis\'')">禁用</el-button>
+					<el-button type="success" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 1)" v-if="scope.row.status != '1' && isHasPermission('\'appyhgl_enordis\'')">启用</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
