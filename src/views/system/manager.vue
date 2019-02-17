@@ -29,11 +29,11 @@
 			</el-table-column>
 			<el-table-column prop="email" label="邮箱" min-width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" :formatter="formatSex" min-width="90" sortable>
-			</el-table-column>
 			<el-table-column prop="phone" label="手机号码" min-width="150" sortable>
 			</el-table-column>
 			<el-table-column prop="status" label="状态" :formatter="formatStatus" min-width="90" sortable>
+			</el-table-column>
+			<el-table-column prop="updateTime" label="更新时间" min-width="120" :formatter="formatTime" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="250">
 				<template scope="scope">

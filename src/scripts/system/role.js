@@ -1,7 +1,7 @@
 import * as Constants from '../../common/constants';
 import getApi from '../../api/api';
-const { getDataListPage, getDataTotal, removeData, editData, addData } = getApi(Constants.MANAGER)
-const roleApi = getApi(Constants.ROLE)
+const { getDataListPage, getDataTotal, removeData, editData, addData } = getApi(Constants.ROLE)
+const { getMenus } = getApi(Constants.DICT)
 
 export default {
     data() {
@@ -17,23 +17,8 @@ export default {
             editFormVisible: false,//编辑界面是否显示
             editLoading: false,
             editFormRules: {
-                realName: [
-                    { required: true, message: '请输入姓名', trigger: 'blur' }
-                ],
-                sex: [
-                    { required: true, message: '请选择性别', trigger: 'blur' }
-                ],
-                role: [
-                    { type: 'number', required: true, message: '请选择角色', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入邮箱', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
-                ],
-                phone: [
-                    { required: true, message: '请输入手机号码', trigger: 'blur' }
+                name: [
+                    { required: true, message: '请输入角色名称', trigger: 'blur' }
                 ]
             },
             //编辑界面数据
@@ -42,23 +27,8 @@ export default {
             addFormVisible: false,//新增界面是否显示
             addLoading: false,
             addFormRules: {
-                realName: [
-                    { required: true, message: '请输入姓名', trigger: 'blur' }
-                ],
-                sex: [
-                    { required: true, message: '请选择性别', trigger: 'blur' }
-                ],
-                role: [
-                    { type: 'number', required: true, message: '请选择角色', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入邮箱', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
-                ],
-                phone: [
-                    { required: true, message: '请输入手机号码', trigger: 'blur' }
+                name: [
+                    { required: true, message: '请输入角色名称', trigger: 'blur' }
                 ]
             },
             //新增界面数据
@@ -66,20 +36,13 @@ export default {
             },
             formInitVal: {
                 id: 0,
-                realName: null,
-                role: null,
-                email: null,
-                sex: null,
-                phone: null,
-                password: null
+                name: null
             },
-            roles: []
+            menus: [],
+            roleMenus: []
         }
     },
     methods: {
-        formatSex: function (row, column) {
-            return row.sex == 'F' ? '女' : '男';
-        },
         formatStatus: function (row, column) {
             return row.status == 1 ? '启用' : '禁用';
         },
@@ -127,11 +90,11 @@ export default {
                 });
             });
         },
-        getRoles() {
+        getMenus() {
             let para = {
             };
-            roleApi.getDataListPage(para).then((res) => {
-                this.roles = res.data.data;
+            getMenus(para).then((res) => {
+                this.menus = res.data.data;
             }).catch(function (error) {
                 console.info(error);
             });
@@ -189,9 +152,17 @@ export default {
         },
         //显示编辑界面
         handleEdit: function (index, row) {
+            if (this.$refs.tree_edit) {
+                this.$refs.tree_edit.setCheckedKeys([])
+            }
+            this.roleMenus = [];
             this.editFormVisible = true;
             this.editForm = this.formInitVal;
             this.editForm = Object.assign({}, row);
+            this.roleMenus = row.scopeIds.split(',')
+            if (this.$refs.tree_edit) {
+                this.$refs.tree_edit.setCheckedKeys(this.roleMenus)
+            }
         },
         //显示新增界面
         handleAdd: function () {
@@ -202,27 +173,40 @@ export default {
         editSubmit: function () {
             this.$refs.editForm.validate((valid) => {
                 if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.editLoading = true;
-                        let para = Object.assign({}, this.editForm);
-                        editData(para).then((res) => {
-                            this.editLoading = false;
-                            if (res.data.success) {
-                                this.$message({
-                                    message: '更新成功',
-                                    type: 'success'
-                                });
-                            } else {
-                                this.$message({
-                                    message: '更新出错',
-                                    type: 'error'
-                                });
-                            }
-                            this.$refs['editForm'].resetFields();
-                            this.editFormVisible = false;
-                            this.refreshData();
+                    let selectedRols = this.$refs.tree_edit.getCheckedNodes();
+                    if (selectedRols && selectedRols.length > 0) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.editLoading = true;
+                            let para = Object.assign({}, this.editForm);
+                            let scopes = [];
+                            selectedRols.forEach(role => {
+                                scopes.push('\'' + role.code + '\'')
+                            });
+                            para.scope = scopes.join(',');
+                            editData(para).then((res) => {
+                                this.editLoading = false;
+                                if (res.data.success) {
+                                    this.$message({
+                                        message: '更新成功',
+                                        type: 'success'
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: '更新出错',
+                                        type: 'error'
+                                    });
+                                }
+                                this.$refs['editForm'].resetFields();
+                                this.editFormVisible = false;
+                                this.refreshData();
+                            });
                         });
-                    });
+                    } else {
+                        this.$message({
+                            message: '请选择菜单',
+                            type: 'error'
+                        });
+                    }
                 }
             });
         },
@@ -230,27 +214,40 @@ export default {
         addSubmit: function () {
             this.$refs.addForm.validate((valid) => {
                 if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.addLoading = true;
-                        let para = Object.assign({}, this.addForm);
-                        addData(para).then((res) => {
-                            this.addLoading = false;
-                            if (res.data.success) {
-                                this.$message({
-                                    message: '添加成功',
-                                    type: 'success'
-                                });
-                            } else {
-                                this.$message({
-                                    message: '添加出错',
-                                    type: 'error'
-                                });
-                            }
-                            this.$refs['addForm'].resetFields();
-                            this.addFormVisible = false;
-                            this.refreshData();
+                    let selectedRols = this.$refs.tree.getCheckedNodes();
+                    if (selectedRols && selectedRols.length > 0) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.addLoading = true;
+                            let para = Object.assign({}, this.addForm);
+                            let scopes = [];
+                            selectedRols.forEach(role => {
+                                scopes.push('\'' + role.code + '\'')
+                            });
+                            para.scope = scopes.join(',');
+                            addData(para).then((res) => {
+                                this.addLoading = false;
+                                if (res.data.success) {
+                                    this.$message({
+                                        message: '添加成功',
+                                        type: 'success'
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: '添加出错',
+                                        type: 'error'
+                                    });
+                                }
+                                this.$refs['addForm'].resetFields();
+                                this.addFormVisible = false;
+                                this.refreshData();
+                            });
                         });
-                    });
+                    } else {
+                        this.$message({
+                            message: '请选择菜单',
+                            type: 'error'
+                        });
+                    }
                 }
             });
         },
@@ -259,7 +256,7 @@ export default {
         }
     },
     mounted() {
-        this.getRoles();
+        this.getMenus();
         this.refreshData();
     }
 }
