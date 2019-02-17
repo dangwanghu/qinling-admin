@@ -6,3 +6,4 @@ export const JINGDIAN = 'jingdian';
 export const DICT = 'dict';
 export const MANAGER = 'manager';
 export const ROLE = 'role';
+export const USER = 'user';

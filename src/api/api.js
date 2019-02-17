@@ -6,6 +6,7 @@ import * as YukouApi from './yukou.api';
 import * as DictApi from './dict.api';
 import * as ManagerApi from './manager.api';
 import * as RoleApi from './role.api';
+import * as UserApi from './user.api';
 import * as Constants from '../common/constants';
 
 export default function getApi(name) {
@@ -26,5 +27,7 @@ export default function getApi(name) {
             return ManagerApi;
         case Constants.ROLE:
             return RoleApi;
+        case Constants.USER:
+            return UserApi;
     }
 }

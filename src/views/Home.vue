@@ -10,14 +10,7 @@
 				</div>
 			</el-col>
 			<el-col :span="4" class="userinfo">
-				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
-					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
-						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-					</el-dropdown-menu>
-				</el-dropdown>
+				<span class="el-dropdown-link userinfo-inner">当前用户: {{sysUserName}}, <a href="javascript:void(0);" style="color: #Ffffff;" @click="logout">退出登录</a></span>
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="main">
@@ -78,7 +71,6 @@
 				sysName:'QINLING-ADMIN',
 				collapsed:false,
 				sysUserName: '',
-				sysUserAvatar: '',
 				form: {
 					name: '',
 					region: '',
@@ -126,8 +118,7 @@
 			var user = sessionStorage.getItem('user');
 			if (user) {
 				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
+				this.sysUserName = user.realName || '';
 			}
 
 		}

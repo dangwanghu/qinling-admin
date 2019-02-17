@@ -83,6 +83,13 @@ module.exports = {
         pathRewrite: {
           '^/roleapi': ''
         }
+      },
+      '/userapi': {
+        target: 'http://localhost:3000/qinling-server',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/userapi': ''
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

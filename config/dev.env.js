@@ -10,5 +10,6 @@ module.exports = merge(prodEnv, {
   YUKOU_BASE_URL: '"yukouapi"',
   ZONGJIAO_BASE_URL: '"zongjiaoapi"',
   MANAGER_BASE_URL: '"managerapi"',
-  ROLE_BASE_URL: '"roleapi"'
+  ROLE_BASE_URL: '"roleapi"',
+  USER_BASE_URL: '"userapi"'
 })

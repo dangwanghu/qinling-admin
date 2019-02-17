@@ -14,6 +14,36 @@ import FaGui from './views/policy/fagui.vue'
 import Manager from './views/system/manager.vue'
 import Role from './views/system/role.vue'
 
+function isHasPermission(code) {
+    let user = sessionStorage.getItem('user');
+    if (user) {
+        user = JSON.parse(user);
+        if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function isHasFolderPermission(codes) {
+    let user = sessionStorage.getItem('user');
+    let hidden = true;
+    if (user) {
+        user = JSON.parse(user);
+
+        if (user.roleScope) {
+            for (let index = 0; index < codes.length; index ++) {
+                let code = codes[index];
+                if (user.roleScope.indexOf(code) != -1) {
+                    hidden = false;
+                    break;
+                }
+            }
+        }
+    }
+    return hidden;
+}
+
 let routes = [
     {
         path: '/login',
@@ -32,8 +62,9 @@ let routes = [
         component: Home,
         name: '规划管理',
         iconCls: 'el-icon-menu',
+        hidden: isHasFolderPermission(["'czgl'"]),
         children: [
-            { path: '/cunzhuang', component: CunZhuang, name: '村庄管理' }
+            { path: '/cunzhuang', component: CunZhuang, name: '村庄管理', hidden: isHasPermission("'czgl'")}
         ]
     },
     {
@@ -41,11 +72,12 @@ let routes = [
         component: Home,
         name: '专题管理',
         iconCls: 'el-icon-picture',
+        hidden: isHasFolderPermission(["'jdgl'", "'zjgl'", "'sfgl'", "'ykgl'"]),
         children: [
-            { path: '/jingdian', component: JingDian, name: '景点管理' },
-            { path: '/zongjiao', component: ZongJiao, name: '宗教管理' },
-            { path: '/shanfeng', component: ShanFeng, name: '山峰管理' },
-            { path: '/yukou', component: YuKou, name: '峪口管理' }
+            { path: '/jingdian', component: JingDian, name: '景点管理', hidden: isHasPermission("'jdgl'")},
+            { path: '/zongjiao', component: ZongJiao, name: '宗教管理', hidden: isHasPermission("'zjgl'")},
+            { path: '/shanfeng', component: ShanFeng, name: '山峰管理', hidden: isHasPermission("'sfgl'")},
+            { path: '/yukou', component: YuKou, name: '峪口管理', hidden: isHasPermission("'ykgl'")}
         ]
     },
     {
@@ -53,8 +85,9 @@ let routes = [
         component: Home,
         name: '政策管理',
         iconCls: 'el-icon-document',
+        hidden: isHasFolderPermission(["'fggl'"]),
         children: [
-            { path: '/fagui', component: FaGui, name: '法规管理' }
+            { path: '/fagui', component: FaGui, name: '法规管理', hidden: isHasPermission("'fggl'")}
         ]
     },
     {
@@ -62,11 +95,12 @@ let routes = [
         component: Home,
         name: '用户管理',
         iconCls: 'el-icon-share',
+        hidden: isHasFolderPermission(["'appyhgl'", "'jbgl'", "'jygl'", "'jcgl'"]),
         children: [
-            { path: '/user', component: User, name: 'APP用户管理' },
-            { path: '/jubao', component: JuBao, name: '举报管理' },
-            { path: '/jianyi', component: JianYi, name: '建议管理' },
-            { path: '/jiucuo', component: JiuCuo, name: '纠错管理' }
+            { path: '/user', component: User, name: 'APP用户管理', hidden: isHasPermission("'appyhgl'")},
+            { path: '/jubao', component: JuBao, name: '举报管理', hidden: isHasPermission("'jbgl'") },
+            { path: '/jianyi', component: JianYi, name: '建议管理', hidden: isHasPermission("'jygl'") },
+            { path: '/jiucuo', component: JiuCuo, name: '纠错管理', hidden: isHasPermission("'jcgl'") }
         ]
     },
     {
@@ -74,9 +108,10 @@ let routes = [
         component: Home,
         name: '系统管理',
         iconCls: 'el-icon-setting',
+        hidden: isHasFolderPermission(["'czygl'", "'jsgl'"]),
         children: [
-            { path: '/manager', component: Manager, name: '操作员管理' },
-            { path: '/role', component: Role, name: '角色管理' }
+            { path: '/manager', component: Manager, name: '操作员管理', hidden: isHasPermission("'czygl'")},
+            { path: '/role', component: Role, name: '角色管理', hidden: isHasPermission("'jsgl'")}
         ]
     },
     {
