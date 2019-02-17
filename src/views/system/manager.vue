@@ -7,10 +7,10 @@
 					<el-input v-model="filters.name" placeholder="姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="refreshData">查询</el-button>
+					<el-button type="primary" v-on:click="refreshData" v-show="isHasPermission('\'czygl_scan\'')">查询</el-button>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增</el-button>
+					<el-button type="primary" @click="handleAdd" v-show="isHasPermission('\'czygl_new\'')">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -35,12 +35,12 @@
 			</el-table-column>
 			<el-table-column prop="updateTime" label="更新时间" min-width="120" :formatter="formatTime" sortable>
 			</el-table-column>
-			<el-table-column label="操作" width="250">
+			<el-table-column label="操作" width="250" v-if="isHasPermission('\'czygl_edit\'') || isHasPermission('\'czygl_delete\'') || isHasPermission('\'czygl_enordis\'')">
 				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-					<el-button type="warning" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 0)" v-if="scope.row.status == '1'">禁用</el-button>
-					<el-button type="success" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 1)" v-if="scope.row.status != '1'">启用</el-button>
+					<el-button size="small" @click="handleEdit(scope.$index, scope.row)" v-show="isHasPermission('\'czygl_edit\'')">编辑</el-button>
+					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-show="isHasPermission('\'czygl_delete\'')">删除</el-button>
+					<el-button type="warning" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 0)" v-if="scope.row.status == '1' && isHasPermission('\'czygl_enordis\'')">禁用</el-button>
+					<el-button type="success" size="small" @click="handleDisOrEnable(scope.$index, scope.row, 1)" v-if="scope.row.status != '1' && isHasPermission('\'czygl_enordis\'')">启用</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

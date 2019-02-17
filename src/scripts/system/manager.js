@@ -77,6 +77,16 @@ export default {
         }
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         formatSex: function (row, column) {
             return row.sex == 'F' ? '女' : '男';
         },
@@ -259,7 +269,14 @@ export default {
         }
     },
     mounted() {
-        this.getRoles();
+        if (this.isHasPermission("'czygl_scan'")) {
+            this.getRoles();
         this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 }
