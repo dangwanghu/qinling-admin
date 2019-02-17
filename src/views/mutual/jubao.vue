@@ -39,7 +39,7 @@
       <el-table-column prop="submitter" label="举报人" min-width="130"></el-table-column>
       <el-table-column prop="phone" label="联系方式" width="130"></el-table-column>
         <el-table-column prop="address" label="举报地址" width="250" :show-overflow-tooltip="true"></el-table-column>        
-      <el-table-column prop="comments" label="处理举报" min-width="100" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="comments" label="处理举报意见" min-width="150" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="操作" width="300" v-if="isHasPermission('\'jbgl_handle\'') || isHasPermission('\'jbgl_delete\'')">
         <template scope="scope">
           <el-button
