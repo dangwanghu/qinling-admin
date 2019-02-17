@@ -43,6 +43,16 @@ export default {
         }
     },
     methods: {
+        isHasPermission(code) {
+            let user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                if (user.roleScope && user.roleScope.indexOf(code) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         formatStatus: function (row, column) {
             return row.status == 1 ? '启用' : '禁用';
         },
@@ -256,7 +266,14 @@ export default {
         }
     },
     mounted() {
-        this.getMenus();
-        this.refreshData();
+        if (this.isHasPermission("'jsgl_scan'")) {
+            this.getMenus();
+            this.refreshData();
+        } else {
+            this.$message({
+                message: '无权访问，联系管理员',
+                type: 'error'
+            });
+        }
     }
 }
